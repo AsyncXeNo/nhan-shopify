@@ -1,3 +1,5 @@
+#!venv/bin/python3
+
 import time
 import traceback
 
