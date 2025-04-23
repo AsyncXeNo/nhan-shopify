@@ -25,7 +25,7 @@ def main() -> None:
     updated_data = {}
     
     for index, website_data in enumerate(config.websites):
-        logger.info(f'[{index+1}/{len(website_data)}] Processing website: {website_data["name"]}')
+        logger.info(f'[{index+1}/{len(config.websites)}] Processing website: {website_data["name"]}')
         
         website_name = website_data['name']
         website_sitemap_url = website_data['sitemap']
