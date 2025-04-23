@@ -36,11 +36,15 @@ def main() -> None:
 
         logger.debug(f'{website_name} - Found {len(new_products)} new products.')
         
-        logger.info(f'{website_name} - Sending data to Apify actor.')
-        start_time = time.time()
-        output = run_and_wait_for_output(website_actor_id, new_products, config.APIFY_API_KEY)
-        end_time = time.time()
-        logger.debug(f'{website_name} - Apify actor completed in {end_time - start_time:.2f} seconds.')
+        if new_products:
+            logger.info(f'{website_name} - Sending data to Apify actor.')
+            start_time = time.time()
+            output = run_and_wait_for_output(website_actor_id, new_products, config.APIFY_API_KEY)
+            end_time = time.time()
+            logger.debug(f'{website_name} - Apify actor completed in {end_time - start_time:.2f} seconds.')
+        else:
+            logger.info(f'{website_name} - No new products found.')
+            output = []
 
         pairs = []
 
