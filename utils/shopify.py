@@ -183,29 +183,53 @@ def add_sales_channels(product_id: str, shopify_api_key: str, shopify_subdomain:
 
 def add_variant_images(original_variants_data: list, original_images_data: list, created_product_variants: list, created_product_images: list, shopify_api_key: str, shopify_subdomain: str) -> dict:
 
-    variants_and_images = []
+    # variants_and_images = []
     
-    for index, _ in enumerate(original_variants_data):
-        try:
-            original_variant_image = original_variants_data[index]['image']['src'].split('?')[0]
-        except Exception:
-            original_variant_image = None
+    # for index, _ in enumerate(original_variants_data):
+    #     try:
+    #         original_variant_image = original_variants_data[index]['image']['src'].split('?')[0]
+    #     except Exception:
+    #         original_variant_image = None
 
-        if not original_variant_image:
-            variants_and_images.append({
-                'id': created_product_variants[0]['id'],
-                'image_id': created_product_images[0]['id']
-            })
-            break
+    #     if not original_variant_image:
+    #         variants_and_images.append({
+    #             'id': created_product_variants[0]['id'],
+    #             'image_id': created_product_images[0]['id']
+    #         })
+    #         break
+
+    #     variants_and_images.append({
+    #         'id': created_product_variants[index]['id'],
+    #         'image_id': created_product_images[
+    #             list(map(
+    #                 lambda img: img['src'].split('?')[0],
+    #                 original_images_data
+    #             )).index(original_variant_image)
+    #         ]['id']
+    #     })
+
+    src_to_image_id = {
+        img['src'].split('?')[0]: img['id']
+        for img in created_product_images
+    }
+
+    variants_and_images = []
+
+    for idx, variant in enumerate(original_variants_data):
+        raw_src = variant.get('image', {}).get('src')
+        key = raw_src.split('?')[0] if raw_src else None
+
+        if key and key in src_to_image_id:
+            image_id = src_to_image_id[key]
+            variant_id = created_product_variants[idx]['id']
+        else:
+            # fallback to first image if no exact match
+            variant_id = created_product_variants[idx]['id']
+            image_id = created_product_images[0]['id']
 
         variants_and_images.append({
-            'id': created_product_variants[index]['id'],
-            'image_id': created_product_images[
-                list(map(
-                    lambda img: img['src'].split('?')[0],
-                    original_images_data
-                )).index(original_variant_image)
-            ]['id']
+            'id': variant_id,
+            'image_id': image_id
         })
 
     for record in variants_and_images:
