@@ -27,7 +27,7 @@ def format_for_shopify(product_data: dict) -> dict:
             images.append(variant['image'])
 
         if not variant['name']:
-            variant['name'] = 'Variant ' + count
+            variant['name'] = 'Variant ' + str(count)
             count += 1
 
         variants.append({
