@@ -73,8 +73,7 @@ def create_product(product_data: dict, shopify_api_key: str, shopify_subdomain: 
         'product': product_data
     }
 
-    response = requests.post(f'https://{shopify_subdomain}/admin/api/2025-04/products.json', headers=headers, json=data)
-
+    response = requests.post(f'https://{shopify_subdomain}/admin/api/2025-04/products.json', headers=headers, json=data) 
     return response.json()['product']
 
 
